@@ -65,6 +65,13 @@ func New(svc *Service, addr string) (*Server, error) {
 	mux.HandleFunc("/jobs", ans.getJobs)
 	mux.HandleFunc("/", ans.index)
 
+	// health ckecker
+	mux.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
+	    w.Header().Set("Content-Type", "application/json")
+	    w.WriteHeader(http.StatusOK)
+	    json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+	})
+
 	// api routes
 	mux.HandleFunc("/api/docs", ans.redocHandler)
 	mux.HandleFunc("/api/v1/jobs", func(w http.ResponseWriter, r *http.Request) {
